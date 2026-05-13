@@ -6,9 +6,13 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
+    "clean": "rm -rf dist out-tsc",
     "build": "ng build enterprise-components",
     "test": "ng test enterprise-components --watch=false",
-    "lint": "ng lint enterprise-components"
+    "lint": "ng lint enterprise-components",
+    "pack:dry-run": "npm pack ./dist/enterprise-components --dry-run",
+    "publish:dry-run": "npm publish ./dist/enterprise-components --dry-run --access public",
+    "publish:public": "npm publish ./dist/enterprise-components --access public"
   },
   "peerDependencies": {
     "@angular/common": ">=17.0.0",
