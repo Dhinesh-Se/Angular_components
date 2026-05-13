@@ -136,6 +136,10 @@ src/lib/shared                  Small shared RxJS/state helpers
 src/public-api.ts               Public exports for consumers
 ```
 
+## Publishing
+
+Build artifacts are published from `dist/enterprise-components`, not from the repository root. See [PUBLISHING.md](./PUBLISHING.md) for npm login, versioning, dry-run, public/private registry, and CI/CD publishing steps.
+
 ## Quality checklist
 
 - Keep feature-specific business rules outside these components.
