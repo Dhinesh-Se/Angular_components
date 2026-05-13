@@ -19,7 +19,7 @@ A reusable Angular library blueprint for enterprise applications. It ships five 
 ## Installation in another Angular workspace
 
 ```bash
-npm install @enterprise/angular-components
+npm install @dhinesh-se/angular-components
 ```
 
 If using this repository directly during development:

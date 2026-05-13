@@ -4,7 +4,7 @@ This repository is an Angular library workspace. Publish the built package from 
 
 ## Exact step-by-step checklist
 
-Use this checklist when you are ready to publish the library. Replace `@enterprise/angular-components` with your real npm scope/package name before publishing if needed.
+Use this checklist when you are ready to publish the library. The npm package scope is configured as `@dhinesh-se`. Rename it only if you intentionally publish under a different npm organization.
 
 ### 1. Confirm package metadata
 
@@ -77,14 +77,14 @@ npm publish ./dist/enterprise-components --registry https://your-registry.exampl
 ### 8. Verify the published package
 
 ```bash
-npm view @enterprise/angular-components version
-npm view @enterprise/angular-components dist-tags
+npm view @dhinesh-se/angular-components version
+npm view @dhinesh-se/angular-components dist-tags
 ```
 
 Then test installation in a separate Angular application:
 
 ```bash
-npm install @enterprise/angular-components
+npm install @dhinesh-se/angular-components
 ```
 
 ### 9. Publish future versions
