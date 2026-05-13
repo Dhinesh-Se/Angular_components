@@ -3,5 +3,10 @@
   "compilerOptions": {
     "outDir": "./out-tsc/lib"
   },
-  "exclude": ["**/*.spec.ts"]
+  "exclude": [
+    "**/*.spec.ts"
+  ],
+  "angularCompilerOptions": {
+    "compilationMode": "partial"
+  }
 }

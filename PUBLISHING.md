@@ -163,14 +163,24 @@ npm publish ./dist/enterprise-components --registry https://registry.npmjs.org/
 
 For GitHub Packages, the package scope must match the GitHub owner or organization, and the registry should be `https://npm.pkg.github.com`.
 
-## Recommended CI/CD outline
+## GitHub Actions CI/CD
 
-1. Checkout code.
-2. Install dependencies with `npm ci`.
-3. Run `npm run lint`, `npm test`, and `npm run build`.
-4. Run `npm run publish:dry-run` on pull requests or release candidates.
-5. On a tagged release, write `//registry.npmjs.org/:_authToken=${NPM_TOKEN}` to `.npmrc` in the CI workspace.
-6. Publish with `npm run publish:public`.
+This repository includes two workflows:
+
+- `.github/workflows/ci.yml` runs on pull requests and pushes. It installs dependencies, builds the Angular library, and validates package contents with `npm run pack:dry-run`.
+- `.github/workflows/publish.yml` runs when a GitHub Release is published or when manually started with `workflow_dispatch`. It builds the library, runs a publish dry-run, and publishes `./dist/enterprise-components` to npm with provenance.
+
+### Required GitHub secret
+
+Create an npm automation token and add it to the repository as a GitHub Actions secret named `NPM_TOKEN`. The publish workflow uses this token through `NODE_AUTH_TOKEN`; do not commit `.npmrc` files containing tokens.
+
+### Release flow with CI/CD
+
+1. Merge changes to the default branch after CI passes.
+2. Update the package version with `npm version patch`, `npm version minor`, or `npm version major`.
+3. Push the commit and tag to GitHub.
+4. Create and publish a GitHub Release for the tag.
+5. GitHub Actions publishes `@dhinesh-se/angular-components` to npm from `dist/enterprise-components`.
 
 ## Common errors
 

@@ -2,9 +2,33 @@
   "name": "@dhinesh-se/angular-components",
   "version": "0.1.0",
   "description": "Reusable enterprise Angular building blocks: permission directive, workflow timeline, smart table, dynamic forms, and query builder.",
+  "license": "MIT",
+  "author": "Dhinesh SE",
+  "homepage": "https://github.com/dhinesh-se/Angular_components#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhinesh-se/Angular_components.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dhinesh-se/Angular_components/issues"
+  },
+  "keywords": [
+    "angular",
+    "components",
+    "enterprise",
+    "permissions",
+    "workflow",
+    "table",
+    "forms",
+    "query-builder"
+  ],
   "private": false,
   "type": "module",
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "clean": "rm -rf dist out-tsc",
     "build": "ng build enterprise-components",

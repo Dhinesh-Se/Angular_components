@@ -1,5 +1,9 @@
 # Enterprise Angular Components
 
+[![CI](https://github.com/dhinesh-se/Angular_components/actions/workflows/ci.yml/badge.svg)](https://github.com/dhinesh-se/Angular_components/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@dhinesh-se/angular-components.svg)](https://www.npmjs.com/package/@dhinesh-se/angular-components)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 A reusable Angular library blueprint for enterprise applications. It ships five standalone building blocks that can be imported independently in any feature, shell, or micro-frontend:
 
 1. **Permission Directive** (`entHasPermission`) for policy-aware rendering.
@@ -135,6 +139,16 @@ src/lib/query-builder           Query AST contracts and recursive builder
 src/lib/shared                  Small shared RxJS/state helpers
 src/public-api.ts               Public exports for consumers
 ```
+
+## Open-source project
+
+This package is prepared for open-source distribution under the MIT License. Community guidelines, contribution steps, security reporting, and release notes are maintained in:
+
+- [LICENSE](./LICENSE)
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- [SECURITY.md](./SECURITY.md)
+- [CHANGELOG.md](./CHANGELOG.md)
 
 ## Publishing
 
