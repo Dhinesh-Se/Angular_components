@@ -3,5 +3,10 @@
   "dest": "dist/enterprise-components",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "assets": [
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ]
 }
