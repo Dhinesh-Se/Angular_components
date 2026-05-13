@@ -1,5 +1,5 @@
 {
-  "name": "@enterprise/angular-components",
+  "name": "@dhinesh-se/angular-components",
   "version": "0.1.0",
   "description": "Reusable enterprise Angular building blocks: permission directive, workflow timeline, smart table, dynamic forms, and query builder.",
   "private": false,
