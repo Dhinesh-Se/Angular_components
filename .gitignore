@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Angular / build outputs
+dist/
+out-tsc/
+bazel-out/
+.angular/cache/
+
+# Test and coverage outputs
+coverage/
+.nyc_output/
+reports/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Runtime / temporary files
+tmp/
+temp/
+.cache/
+*.pid
+*.seed
+*.pid.lock
+
+# Environment and secrets
+.npmrc
+!.npmrc.example
+.env
+.env.*
+!.env.example
+*.local
+
+# IDE / editor files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Package manager caches
+.npm/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnpm-store/
+
+# Generated package archives
+*.tgz
