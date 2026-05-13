@@ -19,7 +19,7 @@ A reusable Angular library blueprint for enterprise applications. It ships five 
 ## Installation in another Angular workspace
 
 ```bash
-npm install @enterprise/angular-components
+npm install @dhinesh-se/angular-components
 ```
 
 If using this repository directly during development:
@@ -138,7 +138,7 @@ src/public-api.ts               Public exports for consumers
 
 ## Publishing
 
-Build artifacts are published from `dist/enterprise-components`, not from the repository root. See [PUBLISHING.md](./PUBLISHING.md) for npm login, versioning, dry-run, public/private registry, and CI/CD publishing steps.
+Build artifacts are published from `dist/enterprise-components`, not from the repository root. The shortest safe flow is `npm install`, `npm run build`, `npm run pack:dry-run`, `npm run publish:dry-run`, then `npm run publish:public`. See [PUBLISHING.md](./PUBLISHING.md) for the full step-by-step npm login, versioning, dry-run, public/private registry, verification, and CI/CD publishing guide.
 
 ## Quality checklist
 

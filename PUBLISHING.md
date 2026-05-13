@@ -2,6 +2,105 @@
 
 This repository is an Angular library workspace. Publish the built package from `dist/enterprise-components`, not the repository root. The root project contains source, workspace configuration, and development dependencies; the npm package is produced by `ng-packagr` during `npm run build`.
 
+## Exact step-by-step checklist
+
+Use this checklist when you are ready to publish the library. The npm package scope is configured as `@dhinesh-se`. Rename it only if you intentionally publish under a different npm organization.
+
+### 1. Confirm package metadata
+
+Open `package.json` and verify:
+
+- `name` is the npm package name you want to publish.
+- `version` is not already published on npm.
+- `private` is `false`.
+- `peerDependencies` match the Angular/RxJS versions supported by your consumers.
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+After the first successful install, commit `package-lock.json` if your team wants deterministic CI installs. CI should then use `npm ci`.
+
+### 3. Build the Angular library
+
+```bash
+npm run build
+```
+
+This creates the publishable package at:
+
+```text
+dist/enterprise-components
+```
+
+### 4. Inspect the package before upload
+
+```bash
+npm run pack:dry-run
+```
+
+Review the output and confirm it contains compiled Angular package files such as package metadata, bundles, type declarations, and public API declarations.
+
+### 5. Validate npm publish without uploading
+
+```bash
+npm run publish:dry-run
+```
+
+Fix any package metadata, access, or authentication issues before continuing.
+
+### 6. Login to npm
+
+```bash
+npm login
+npm whoami
+```
+
+If `npm whoami` does not print your npm username, authentication is not ready.
+
+### 7. Publish
+
+For a public scoped package:
+
+```bash
+npm run publish:public
+```
+
+For a private enterprise registry, use your registry URL and required access settings instead of the public npm script:
+
+```bash
+npm publish ./dist/enterprise-components --registry https://your-registry.example.com/
+```
+
+### 8. Verify the published package
+
+```bash
+npm view @dhinesh-se/angular-components version
+npm view @dhinesh-se/angular-components dist-tags
+```
+
+Then test installation in a separate Angular application:
+
+```bash
+npm install @dhinesh-se/angular-components
+```
+
+### 9. Publish future versions
+
+For every new release, update the version, rebuild, dry-run, and publish again:
+
+```bash
+npm version patch
+npm run build
+npm run pack:dry-run
+npm run publish:dry-run
+npm run publish:public
+git push
+git push --tags
+```
+
 ## One-time npm setup
 
 1. Create or use an npm account at <https://www.npmjs.com/>.
