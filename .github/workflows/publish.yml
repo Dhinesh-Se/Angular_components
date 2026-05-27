@@ -34,13 +34,13 @@ jobs:
       - name: Build package
         run: npm run build
 
-      - name: Validate npm authentication token is configured
+      - name: Validate npm authentication token
         run: |
           if [ -z "$NODE_AUTH_TOKEN" ]; then
             echo "::error::NPM_TOKEN secret is not configured. Add repository secret NPM_TOKEN with npm automation token."
             exit 1
           fi
-          echo "NPM_TOKEN detected; proceeding to npm publish dry-run validation."
+          npm whoami
 
       - name: Dry-run publish validation
         run: npm run publish:dry-run
