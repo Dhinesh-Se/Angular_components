@@ -14,4 +14,5 @@ export interface WorkflowTimelineConfig {
   readonly orientation?: 'horizontal' | 'vertical';
   readonly showMetadata?: boolean;
   readonly density?: 'comfortable' | 'compact';
+  readonly showProgress?: boolean;
 }

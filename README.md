@@ -128,6 +128,47 @@ queryFields = [
 
 The emitted `QueryGroup` AST can be translated to REST query params, GraphQL filters, or backend-specific search DSLs in an application adapter.
 
+
+
+### Enhanced Query Builder UX (v0.3.0)
+
+`ent-query-builder` now includes richer built-in behavior:
+
+- **Type-aware inputs**: enum fields render as dropdowns, boolean fields render as true/false selectors.
+- **Live summary** (`showSummary`, default `true`): displays a readable sentence for active rules.
+- **Compiled preview** (`showCompiledPreview` + `previewDialect`): preview SQL/Mongo/OData output directly in UI.
+
+```html
+<ent-query-builder
+  [fields]="queryFields"
+  [showPreview]="true"
+  [showSummary]="true"
+  [showCompiledPreview]="true"
+  previewDialect="sql"
+  (queryChange)="filters = $event" />
+```
+
+## Query Compiler (new)
+
+To make the Query Builder more production-ready, this package now includes a **Query Compiler** utility.
+
+It converts the emitted `QueryGroup` AST into backend-friendly filter syntax for:
+
+- SQL-like WHERE fragments
+- MongoDB query snippets
+- OData `$filter` expressions
+
+```ts
+import { compileQuery, describeQuery } from '@dhinesh-se/angular-components';
+
+const sql = compileQuery(filters, { dialect: 'sql', fieldMap: { createdAt: 'created_at' } });
+const mongo = compileQuery(filters, { dialect: 'mongo' });
+const odata = compileQuery(filters, { dialect: 'odata' });
+const summary = describeQuery(filters, queryFields);
+```
+
+This keeps UI concerns in the component while giving teams a reusable adapter layer for API integration.
+
 ## Project layout
 
 ```text
@@ -160,3 +201,11 @@ Build artifacts are published from `dist/enterprise-components`, not from the re
 - Prefer immutable inputs and observable streams for server-driven data.
 - Provide adapters at application boundaries for auth, persistence, and backend query translation.
 - Add design-system wrappers if your enterprise has a shared token or theming layer.
+
+
+### Cross-component enhancements (v0.4.0)
+
+- **Dynamic Form**: supports field `section`, schema `description`, and live completion progress UI.
+- **Smart Table**: shows selected row count, clear-selection button, and emits `rowClicked`.
+- **Workflow Timeline**: can show completed-step progress banner via `config.showProgress`.
+- **Permission Directive**: permission decisions now include `matched` permissions for richer UI context.

@@ -11,6 +11,7 @@ export interface PermissionContext {
 export interface PermissionDecision {
   readonly allowed: boolean;
   readonly missing: readonly string[];
+  readonly matched: readonly string[];
 }
 
 export interface PermissionEvaluator {

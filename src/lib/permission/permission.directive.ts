@@ -58,6 +58,12 @@ export class PermissionDirective {
 
     if (decision.allowed) {
       this.allowedView = this.viewContainer.createEmbeddedView(this.templateRef, context);
+      this.allowedView.rootNodes.forEach((node: unknown) => {
+        if (node instanceof HTMLElement) {
+          node.setAttribute('data-ent-permission', 'allowed');
+          node.setAttribute('title', decision.matched.length > 0 ? `Matched: ${decision.matched.join(', ')}` : 'Allowed');
+        }
+      });
       return;
     }
 
