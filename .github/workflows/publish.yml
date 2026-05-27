@@ -15,6 +15,9 @@ jobs:
     name: Publish to npm
     runs-on: ubuntu-latest
 
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,12 +34,16 @@ jobs:
       - name: Build package
         run: npm run build
 
+      - name: Validate npm authentication token
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::NPM_TOKEN secret is not configured. Add repository secret NPM_TOKEN with npm automation token."
+            exit 1
+          fi
+          npm whoami
+
       - name: Dry-run publish validation
         run: npm run publish:dry-run
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to npm
         run: npm publish ./dist/enterprise-components --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
