@@ -128,6 +128,28 @@ queryFields = [
 
 The emitted `QueryGroup` AST can be translated to REST query params, GraphQL filters, or backend-specific search DSLs in an application adapter.
 
+
+## Query Compiler (new)
+
+To make the Query Builder more production-ready, this package now includes a **Query Compiler** utility.
+
+It converts the emitted `QueryGroup` AST into backend-friendly filter syntax for:
+
+- SQL-like WHERE fragments
+- MongoDB query snippets
+- OData `$filter` expressions
+
+```ts
+import { compileQuery, describeQuery } from '@dhinesh-se/angular-components';
+
+const sql = compileQuery(filters, { dialect: 'sql', fieldMap: { createdAt: 'created_at' } });
+const mongo = compileQuery(filters, { dialect: 'mongo' });
+const odata = compileQuery(filters, { dialect: 'odata' });
+const summary = describeQuery(filters, queryFields);
+```
+
+This keeps UI concerns in the component while giving teams a reusable adapter layer for API integration.
+
 ## Project layout
 
 ```text

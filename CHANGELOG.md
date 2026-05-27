@@ -6,8 +6,12 @@ This project follows semantic versioning where practical: patch releases for fix
 
 ## [Unreleased]
 
-- Prepare the package for open-source distribution.
-- Add CI and npm publishing automation.
+## [0.2.0] - 2026-05-27
+
+- Add Query Compiler utilities (`compileQuery`, `describeQuery`) to convert Query Builder AST into SQL, MongoDB, and OData expressions.
+- Export query compiler from public API for library consumers.
+- Improve README with backend integration example for the query builder.
+
 
 ## [0.1.0] - 2026-05-13
 
