@@ -10,3 +10,4 @@ export * from './lib/dynamic-form/dynamic-form.models';
 export * from './lib/dynamic-form/dynamic-form-renderer.component';
 export * from './lib/query-builder/query-builder.models';
 export * from './lib/query-builder/query-builder.component';
+export * from './lib/query-builder/query-compiler';
