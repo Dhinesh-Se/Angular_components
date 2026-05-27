@@ -36,7 +36,7 @@ jobs:
         run: |
           npm run version:auto
           npm install --package-lock-only
-          echo "Publishing version: $(node -p \"require('./package.json').version\")"
+          echo "Publishing version: $(node -p 'require(\"./package.json\").version')"
 
       - name: Build package
         run: npm run build
