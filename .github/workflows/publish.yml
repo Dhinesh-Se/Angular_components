@@ -32,6 +32,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Auto-bump version from npm before publish
+        run: |
+          npm run version:auto
+          npm install --package-lock-only
+          echo "Publishing version: $(node -p \"require('./package.json').version\")"
+
       - name: Build package
         run: npm run build
 

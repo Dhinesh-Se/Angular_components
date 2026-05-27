@@ -174,6 +174,16 @@ This repository includes two workflows:
 
 Create an npm automation token and add it to the repository as a GitHub Actions secret named `NPM_TOKEN`. The publish workflow uses this token through `NODE_AUTH_TOKEN`; do not commit `.npmrc` files containing tokens.
 
+### Auto version bump in CI publish workflow
+
+The publish workflow now runs `npm run version:auto` before build/publish. This checks npm for the latest published version and automatically bumps `package.json` to the next patch version when needed.
+
+What this means in practice:
+
+- You can publish via GitHub Release or manual `workflow_dispatch` without manually editing the version every time.
+- The workflow keeps each publish unique by incrementing patch when local version is not ahead of npm.
+- Build and publish always use the auto-resolved version from CI.
+
 ### Release flow with CI/CD
 
 1. Merge changes to the default branch after CI passes.
