@@ -1,6 +1,6 @@
 {
   "name": "@dhinesh-se/angular-components",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Reusable enterprise Angular building blocks: permission directive, workflow timeline, smart table, dynamic forms, and query builder.",
   "license": "MIT",
   "author": "Dhinesh SE",

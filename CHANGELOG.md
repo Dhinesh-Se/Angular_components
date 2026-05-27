@@ -6,6 +6,12 @@ This project follows semantic versioning where practical: patch releases for fix
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-05-27
+
+- Enhance `ent-query-builder` UX with type-aware editors for enum and boolean fields.
+- Add `showSummary`, `showCompiledPreview`, and `previewDialect` inputs for instant query feedback.
+- Auto-generate human-readable summary and compiled dialect preview from the live query AST.
+
 ## [0.2.0] - 2026-05-27
 
 - Add Query Compiler utilities (`compileQuery`, `describeQuery`) to convert Query Builder AST into SQL, MongoDB, and OData expressions.

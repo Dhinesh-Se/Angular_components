@@ -129,6 +129,25 @@ queryFields = [
 The emitted `QueryGroup` AST can be translated to REST query params, GraphQL filters, or backend-specific search DSLs in an application adapter.
 
 
+
+### Enhanced Query Builder UX (v0.3.0)
+
+`ent-query-builder` now includes richer built-in behavior:
+
+- **Type-aware inputs**: enum fields render as dropdowns, boolean fields render as true/false selectors.
+- **Live summary** (`showSummary`, default `true`): displays a readable sentence for active rules.
+- **Compiled preview** (`showCompiledPreview` + `previewDialect`): preview SQL/Mongo/OData output directly in UI.
+
+```html
+<ent-query-builder
+  [fields]="queryFields"
+  [showPreview]="true"
+  [showSummary]="true"
+  [showCompiledPreview]="true"
+  previewDialect="sql"
+  (queryChange)="filters = $event" />
+```
+
 ## Query Compiler (new)
 
 To make the Query Builder more production-ready, this package now includes a **Query Compiler** utility.
