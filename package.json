@@ -4,13 +4,13 @@
   "description": "Reusable enterprise Angular building blocks: permission directive, workflow timeline, smart table, dynamic forms, and query builder.",
   "license": "MIT",
   "author": "Dhinesh SE",
-  "homepage": "https://github.com/dhinesh-se/Angular_components#readme",
+  "homepage": "https://github.com/Dhinesh-Se/Angular_components#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dhinesh-se/Angular_components.git"
+    "url": "https://github.com/Dhinesh-Se/Angular_components"
   },
   "bugs": {
-    "url": "https://github.com/dhinesh-se/Angular_components/issues"
+    "url": "https://github.com/Dhinesh-Se/Angular_components/issues"
   },
   "keywords": [
     "angular",
@@ -36,7 +36,8 @@
     "lint": "ng lint enterprise-components",
     "pack:dry-run": "npm pack ./dist/enterprise-components --dry-run",
     "publish:dry-run": "npm publish ./dist/enterprise-components --dry-run --access public",
-    "publish:public": "npm publish ./dist/enterprise-components --access public"
+    "publish:public": "npm run version:auto && npm publish ./dist/enterprise-components --access public",
+    "version:auto": "node scripts/auto-bump-version.mjs"
   },
   "peerDependencies": {
     "@angular/common": ">=17.0.0",
