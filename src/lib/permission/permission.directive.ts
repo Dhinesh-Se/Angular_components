@@ -1,5 +1,6 @@
-import { Directive, EmbeddedViewRef, Inject, Input, Optional, TemplateRef, ViewContainerRef } from '@angular/core';
-import { Subject, combineLatest, startWith, switchMap, takeUntil } from 'rxjs';
+import { Directive, DestroyRef, EmbeddedViewRef, Inject, Input, Optional, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Subject, combineLatest, startWith, switchMap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DefaultPermissionEvaluator, PermissionStore } from './permission-store.service';
 import { PERMISSION_EVALUATOR, PermissionDecision, PermissionEvaluator, PermissionMode } from './permission.models';
 
@@ -16,7 +17,6 @@ interface PermissionViewContext {
 export class PermissionDirective {
   private readonly requiredSubject = new Subject<readonly string[]>();
   private readonly modeSubject = new Subject<PermissionMode>();
-  private readonly destroySubject = new Subject<void>();
   private fallbackTemplate?: TemplateRef<PermissionViewContext>;
   private allowedView?: EmbeddedViewRef<PermissionViewContext>;
   private deniedView?: EmbeddedViewRef<PermissionViewContext>;
@@ -38,6 +38,7 @@ export class PermissionDirective {
     private readonly viewContainer: ViewContainerRef,
     private readonly permissionStore: PermissionStore,
     private readonly defaultEvaluator: DefaultPermissionEvaluator,
+    private readonly destroyRef: DestroyRef,
     @Optional() @Inject(PERMISSION_EVALUATOR) private readonly customEvaluator: PermissionEvaluator | null,
   ) {
     const evaluator = this.customEvaluator ?? this.defaultEvaluator;
@@ -47,13 +48,8 @@ export class PermissionDirective {
       this.modeSubject.pipe(startWith('all' as PermissionMode)),
     ]).pipe(
       switchMap(([required, mode]) => this.permissionStore.selectDecision(required, mode, evaluator)),
-      takeUntil(this.destroySubject),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(decision => this.render(decision));
-  }
-
-  ngOnDestroy(): void {
-    this.destroySubject.next();
-    this.destroySubject.complete();
   }
 
   private render(decision: PermissionDecision): void {

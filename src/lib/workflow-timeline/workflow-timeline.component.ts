@@ -1,5 +1,5 @@
 import { AsyncPipe, CommonModule, DatePipe, KeyValuePipe, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Input, Output, inject } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, shareReplay, switchAll } from 'rxjs';
 import { ObservableInput, toObservable } from '../shared/rxjs-utils';
 import { WorkflowStep, WorkflowTimelineConfig } from './workflow-timeline.models';
@@ -23,27 +23,29 @@ const DEFAULT_CONFIG: Required<WorkflowTimelineConfig> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="ent-timeline" [class.ent-timeline--horizontal]="(vm$ | async)?.config?.orientation === 'horizontal'">
-      <ol class="ent-timeline__list" *ngIf="vm$ | async as vm">
-        <li class="ent-timeline__item" *ngFor="let step of vm.steps; trackBy: trackByStep" [ngClass]="'is-' + step.status">
-          <button class="ent-timeline__marker" type="button" (click)="stepSelected.emit(step)" [attr.aria-label]="step.label + ' status ' + step.status">
-            {{ step.status === 'completed' ? '✓' : step.status === 'failed' ? '!' : '•' }}
-          </button>
-          <article class="ent-timeline__content">
-            <header>
-              <h3>{{ step.label }}</h3>
-              <span class="ent-timeline__status">{{ step.status }}</span>
-            </header>
-            <p *ngIf="step.description">{{ step.description }}</p>
-            <small *ngIf="step.timestamp">{{ step.timestamp | date:'medium' }}</small>
-            <small *ngIf="step.actor">Owner: {{ step.actor }}</small>
-            <dl *ngIf="vm.config.showMetadata && step.metadata">
-              <ng-container *ngFor="let item of step.metadata | keyvalue">
-                <dt>{{ item.key }}</dt><dd>{{ item.value }}</dd>
-              </ng-container>
-            </dl>
-          </article>
-        </li>
-      </ol>
+      <div *ngIf="vm$ | async as vm">
+        <ol class="ent-timeline__list">
+          <li class="ent-timeline__item" *ngFor="let step of vm.steps; trackBy: trackByStep" [ngClass]="'is-' + step.status">
+            <button class="ent-timeline__marker" type="button" (click)="stepSelected.emit(step)" [attr.aria-label]="step.label + ' status ' + step.status">
+              {{ step.status === 'completed' ? '✓' : step.status === 'failed' ? '!' : '•' }}
+            </button>
+            <article class="ent-timeline__content">
+              <header>
+                <h3>{{ step.label }}</h3>
+                <span class="ent-timeline__status">{{ step.status }}</span>
+              </header>
+              <p *ngIf="step.description">{{ step.description }}</p>
+              <small *ngIf="step.timestamp">{{ step.timestamp | date:'medium' }}</small>
+              <small *ngIf="step.actor">Owner: {{ step.actor }}</small>
+              <dl *ngIf="vm.config.showMetadata && step.metadata">
+                <ng-container *ngFor="let item of step.metadata | keyvalue">
+                  <dt>{{ item.key }}</dt><dd>{{ item.value }}</dd>
+                </ng-container>
+              </dl>
+            </article>
+          </li>
+        </ol>
+      </div>
     </section>
   `,
   styles: [`
@@ -53,6 +55,7 @@ const DEFAULT_CONFIG: Required<WorkflowTimelineConfig> = {
 export class WorkflowTimelineComponent {
   private readonly stepsInput = new BehaviorSubject<ObservableInput<readonly WorkflowStep[]> | null>([]);
   private readonly configInput = new BehaviorSubject<WorkflowTimelineConfig>({});
+  private readonly destroyRef = inject(DestroyRef);
 
   @Input() set steps(value: ObservableInput<readonly WorkflowStep[]> | null) { this.stepsInput.next(value); }
   @Input() set config(value: WorkflowTimelineConfig | null) { this.configInput.next(value ?? {}); }

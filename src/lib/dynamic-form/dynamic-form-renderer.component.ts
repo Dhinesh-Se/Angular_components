@@ -1,7 +1,8 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, combineLatest, map, shareReplay, startWith, switchAll } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DynamicFormField, DynamicFormSchema, DynamicFormSubmit } from './dynamic-form.models';
 
 interface DynamicFormVm {
@@ -16,23 +17,25 @@ interface DynamicFormVm {
   imports: [AsyncPipe, CommonModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <form class="ent-form" *ngIf="vm$ | async as vm" [formGroup]="vm.form" (ngSubmit)="submit(vm)">
-      <h2 *ngIf="vm.schema.title">{{ vm.schema.title }}</h2>
-      <ng-container *ngFor="let field of vm.visibleFields; trackBy: trackByField">
-        <label class="ent-form__field" [attr.for]="field.key">
-          <span>{{ field.label }}</span>
-          <input *ngIf="field.type === 'text' || field.type === 'number' || field.type === 'date'" [id]="field.key" [type]="field.type" [placeholder]="field.placeholder ?? ''" [formControlName]="field.key" />
-          <textarea *ngIf="field.type === 'textarea'" [id]="field.key" [placeholder]="field.placeholder ?? ''" [formControlName]="field.key"></textarea>
-          <select *ngIf="field.type === 'select'" [id]="field.key" [formControlName]="field.key">
-            <option *ngFor="let option of field.options ?? []" [ngValue]="option.value">{{ option.label }}</option>
-          </select>
-          <input *ngIf="field.type === 'checkbox'" [id]="field.key" type="checkbox" [formControlName]="field.key" />
-          <small *ngIf="field.hint">{{ field.hint }}</small>
-          <small class="ent-form__error" *ngIf="vm.form.controls[field.key].invalid && vm.form.controls[field.key].touched">Please review {{ field.label }}.</small>
-        </label>
-      </ng-container>
-      <button type="submit" [disabled]="vm.form.invalid">{{ vm.schema.submitLabel ?? 'Submit' }}</button>
-    </form>
+    <div *ngIf="vm$ | async as vm">
+      <form class="ent-form" [formGroup]="vm.form" (ngSubmit)="submit(vm)">
+        <h2 *ngIf="vm.schema.title">{{ vm.schema.title }}</h2>
+        <ng-container *ngFor="let field of vm.visibleFields; trackBy: trackByField">
+          <label class="ent-form__field" [attr.for]="field.key">
+            <span>{{ field.label }}</span>
+            <input *ngIf="field.type === 'text' || field.type === 'number' || field.type === 'date'" [id]="field.key" [type]="field.type" [placeholder]="field.placeholder ?? ''" [formControlName]="field.key" />
+            <textarea *ngIf="field.type === 'textarea'" [id]="field.key" [placeholder]="field.placeholder ?? ''" [formControlName]="field.key"></textarea>
+            <select *ngIf="field.type === 'select'" [id]="field.key" [formControlName]="field.key">
+              <option *ngFor="let option of field.options ?? []" [ngValue]="option.value">{{ option.label }}</option>
+            </select>
+            <input *ngIf="field.type === 'checkbox'" [id]="field.key" type="checkbox" [formControlName]="field.key" />
+            <small *ngIf="field.hint">{{ field.hint }}</small>
+            <small class="ent-form__error" *ngIf="vm.form.controls[field.key].invalid && vm.form.controls[field.key].touched">Please review {{ field.label }}.</small>
+          </label>
+        </ng-container>
+        <button type="submit" [disabled]="vm.form.invalid">{{ vm.schema.submitLabel ?? 'Submit' }}</button>
+      </form>
+    </div>
   `,
   styles: [`.ent-form{display:grid;gap:1rem;max-width:48rem}.ent-form__field{display:grid;gap:.35rem}input,textarea,select{border:1px solid #cbd5e1;border-radius:.5rem;padding:.65rem}.ent-form__error{color:#dc2626}button{justify-self:start;border:0;border-radius:.5rem;background:#2563eb;color:white;padding:.7rem 1rem}`]
 })
@@ -40,6 +43,7 @@ interface DynamicFormVm {
 export class DynamicFormRendererComponent {
   private readonly schemaSubject = new BehaviorSubject<DynamicFormSchema>({ id: 'empty', fields: [] });
   private readonly initialValueSubject = new BehaviorSubject<Record<string, unknown>>({});
+  private readonly destroyRef = inject(DestroyRef);
 
   @Input() set schema(schema: DynamicFormSchema | null) { this.schemaSubject.next(schema ?? { id: 'empty', fields: [] }); }
   @Input() set value(value: Record<string, unknown> | null) { this.initialValueSubject.next(value ?? {}); }
@@ -74,7 +78,10 @@ export class DynamicFormRendererComponent {
     }, {});
 
     const form = new FormGroup(controls);
-    form.valueChanges.pipe(startWith(form.getRawValue())).subscribe(formValue => {
+    form.valueChanges.pipe(
+      startWith(form.getRawValue()),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(formValue => {
       schema.fields.forEach(field => {
         const control = form.controls[field.key];
         if (!control || !field.disabledWhen) { return; }

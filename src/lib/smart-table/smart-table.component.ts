@@ -20,34 +20,36 @@ const DEFAULT_STATE: SmartTableState = { pageIndex: 0, pageSize: 10, sortDirecti
   imports: [AsyncPipe, CommonModule, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="ent-table" *ngIf="vm$ | async as vm">
-      <label class="ent-table__filter">Search <input type="search" [value]="vm.state.filter" (input)="setFilter($any($event.target).value)" /></label>
-      <table>
-        <thead><tr>
-          <th scope="col">Select</th>
-          <th *ngFor="let column of vm.columns; trackBy: trackByColumn" scope="col">
-            <button type="button" [disabled]="!column.sortable" (click)="toggleSort(column)">{{ column.label }} {{ sortGlyph(vm.state, column) }}</button>
-          </th>
-        </tr></thead>
-        <tbody>
-          <tr *ngFor="let row of vm.rows; trackBy: trackByRow">
-            <td><input type="checkbox" [checked]="isSelected(vm.state, row)" (change)="toggleSelection(row)" /></td>
-            <td *ngFor="let column of vm.columns; trackBy: trackByColumn">
-              <ng-container *ngIf="column.cellTemplate; else defaultCell" [ngTemplateOutlet]="column.cellTemplate" [ngTemplateOutletContext]="{ $implicit: row, value: getValue(row, column) }"></ng-container>
-              <ng-template #defaultCell>{{ getValue(row, column) }}</ng-template>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <footer class="ent-table__pager">
-        <button type="button" (click)="previousPage()" [disabled]="vm.state.pageIndex === 0">Previous</button>
-        <span>Page {{ vm.state.pageIndex + 1 }} of {{ pageCount(vm.total, vm.state.pageSize) }}</span>
-        <button type="button" (click)="nextPage(vm.total)" [disabled]="vm.state.pageIndex + 1 >= pageCount(vm.total, vm.state.pageSize)">Next</button>
-        <select [value]="vm.state.pageSize" (change)="setPageSize(+$any($event.target).value)">
-          <option *ngFor="let size of vm.pageSizeOptions" [value]="size">{{ size }}</option>
-        </select>
-      </footer>
-    </section>
+    <div *ngIf="vm$ | async as vm">
+      <section class="ent-table">
+        <label class="ent-table__filter">Search <input type="search" [value]="vm.state.filter" (input)="setFilter($any($event.target).value)" /></label>
+        <table>
+          <thead><tr>
+            <th scope="col">Select</th>
+            <th *ngFor="let column of vm.columns; trackBy: trackByColumn" scope="col">
+              <button type="button" [disabled]="!column.sortable" (click)="toggleSort(column)">{{ column.label }} {{ sortGlyph(vm.state, column) }}</button>
+            </th>
+          </tr></thead>
+          <tbody>
+            <tr *ngFor="let row of vm.rows; trackBy: trackByRow">
+              <td><input type="checkbox" [checked]="isSelected(vm.state, row)" (change)="toggleSelection(row)" /></td>
+              <td *ngFor="let column of vm.columns; trackBy: trackByColumn">
+                <ng-container *ngIf="column.cellTemplate; else defaultCell" [ngTemplateOutlet]="column.cellTemplate" [ngTemplateOutletContext]="{ $implicit: row, value: getValue(row, column) }"></ng-container>
+                <ng-template #defaultCell>{{ getValue(row, column) }}</ng-template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <footer class="ent-table__pager">
+          <button type="button" (click)="previousPage()" [disabled]="vm.state.pageIndex === 0">Previous</button>
+          <span>Page {{ vm.state.pageIndex + 1 }} of {{ pageCount(vm.total, vm.state.pageSize) }}</span>
+          <button type="button" (click)="nextPage(vm.total)" [disabled]="vm.state.pageIndex + 1 >= pageCount(vm.total, vm.state.pageSize)">Next</button>
+          <select [value]="vm.state.pageSize" (change)="setPageSize(+$any($event.target).value)">
+            <option *ngFor="let size of vm.pageSizeOptions" [value]="size">{{ size }}</option>
+          </select>
+        </footer>
+      </section>
+    </div>
   `,
   styles: [`.ent-table{display:grid;gap:1rem}.ent-table__filter{justify-self:end}table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid #e5e7eb;padding:.75rem;text-align:left}th button{background:transparent;border:0;font:inherit;cursor:pointer}.ent-table__pager{display:flex;align-items:center;gap:.75rem;justify-content:flex-end}`]
 })

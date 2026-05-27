@@ -13,10 +13,12 @@ const id = (): string => Math.random().toString(36).slice(2, 10);
   imports: [CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="ent-query" *ngIf="vm$ | async as vm">
-      <ng-container *ngTemplateOutlet="groupTemplate; context: { group: vm.root, depth: 0 }"></ng-container>
-      <pre *ngIf="showPreview">{{ vm.root | json }}</pre>
-    </section>
+    <div *ngIf="vm$ | async as vm">
+      <section class="ent-query">
+        <ng-container *ngTemplateOutlet="groupTemplate; context: { group: vm.root, depth: 0 }"></ng-container>
+        <pre *ngIf="showPreview">{{ vm.root | json }}</pre>
+      </section>
+    </div>
 
     <ng-template #groupTemplate let-group="group" let-depth="depth">
       <fieldset class="ent-query__group" [style.margin-left.rem]="depth">

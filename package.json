@@ -7,7 +7,7 @@
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf dist out-tsc",
-    "build": "ng build enterprise-components",
+    "build": "ng build enterprise-components && node -e \"const pkg = require('./dist/enterprise-components/package.json'); delete pkg.scripts; require('fs').writeFileSync('./dist/enterprise-components/package.json', JSON.stringify(pkg, null, 2))\"",
     "test": "ng test enterprise-components --watch=false",
     "lint": "ng lint enterprise-components",
     "pack:dry-run": "npm pack ./dist/enterprise-components --dry-run",
@@ -21,17 +21,17 @@
     "rxjs": ">=7.8.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^18.2.0",
-    "@angular/cli": "^18.2.0",
-    "@angular/common": "^18.2.0",
-    "@angular/compiler": "^18.2.0",
-    "@angular/compiler-cli": "^18.2.0",
-    "@angular/core": "^18.2.0",
-    "@angular/forms": "^18.2.0",
-    "ng-packagr": "^18.2.0",
+    "@angular-devkit/build-angular": "^21.2.10",
+    "@angular/cli": "^21.2.10",
+    "@angular/common": "^21.2.12",
+    "@angular/compiler": "^21.2.12",
+    "@angular/compiler-cli": "^21.2.12",
+    "@angular/core": "^21.2.12",
+    "@angular/forms": "^21.2.12",
+    "ng-packagr": "^21.2.3",
     "rxjs": "^7.8.1",
     "tslib": "^2.6.0",
-    "typescript": "~5.5.0",
-    "zone.js": "^0.14.10"
+    "typescript": "~5.9.0",
+    "zone.js": "^0.16.0"
   }
 }
