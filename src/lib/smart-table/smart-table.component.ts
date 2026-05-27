@@ -10,6 +10,7 @@ interface SmartTableVm<T> {
   readonly total: number;
   readonly state: SmartTableState;
   readonly pageSizeOptions: readonly number[];
+  readonly selectedCount: number;
 }
 
 const DEFAULT_STATE: SmartTableState = { pageIndex: 0, pageSize: 10, sortDirection: '', filter: '', selectedIds: [] };
@@ -23,6 +24,10 @@ const DEFAULT_STATE: SmartTableState = { pageIndex: 0, pageSize: 10, sortDirecti
     <div *ngIf="vm$ | async as vm">
       <section class="ent-table">
         <label class="ent-table__filter">Search <input type="search" [value]="vm.state.filter" (input)="setFilter($any($event.target).value)" /></label>
+        <div class="ent-table__actions">
+          <span>Selected: {{ vm.selectedCount }}</span>
+          <button type="button" (click)="clearSelection()" [disabled]="vm.selectedCount === 0">Clear selection</button>
+        </div>
         <table>
           <thead><tr>
             <th scope="col">Select</th>
@@ -31,7 +36,7 @@ const DEFAULT_STATE: SmartTableState = { pageIndex: 0, pageSize: 10, sortDirecti
             </th>
           </tr></thead>
           <tbody>
-            <tr *ngFor="let row of vm.rows; trackBy: trackByRow">
+            <tr *ngFor="let row of vm.rows; trackBy: trackByRow" (click)="rowClicked.emit(row)">
               <td><input type="checkbox" [checked]="isSelected(vm.state, row)" (change)="toggleSelection(row)" /></td>
               <td *ngFor="let column of vm.columns; trackBy: trackByColumn">
                 <ng-container *ngIf="column.cellTemplate; else defaultCell" [ngTemplateOutlet]="column.cellTemplate" [ngTemplateOutletContext]="{ $implicit: row, value: getValue(row, column) }"></ng-container>
@@ -51,7 +56,7 @@ const DEFAULT_STATE: SmartTableState = { pageIndex: 0, pageSize: 10, sortDirecti
       </section>
     </div>
   `,
-  styles: [`.ent-table{display:grid;gap:1rem}.ent-table__filter{justify-self:end}table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid #e5e7eb;padding:.75rem;text-align:left}th button{background:transparent;border:0;font:inherit;cursor:pointer}.ent-table__pager{display:flex;align-items:center;gap:.75rem;justify-content:flex-end}`]
+  styles: [`.ent-table{display:grid;gap:1rem}.ent-table__filter{justify-self:end}.ent-table__actions{display:flex;gap:.75rem;justify-content:flex-end;align-items:center}table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid #e5e7eb;padding:.75rem;text-align:left}th button{background:transparent;border:0;font:inherit;cursor:pointer}.ent-table__pager{display:flex;align-items:center;gap:.75rem;justify-content:flex-end}`]
 })
 /** Reactive table shell: accepts raw rows and emits UI state so apps can persist, sync, or server-drive table behavior. */
 export class SmartTableComponent<T extends Record<string, unknown> = Record<string, unknown>> {
@@ -67,6 +72,7 @@ export class SmartTableComponent<T extends Record<string, unknown> = Record<stri
   }
   @Output() readonly stateChange = new EventEmitter<SmartTableState>();
   @Output() readonly selectionChange = new EventEmitter<readonly string[]>();
+  @Output() readonly rowClicked = new EventEmitter<T>();
 
   readonly vm$ = combineLatest([
     this.dataInput.pipe(map(input => toObservable(input, [])), switchAll()),
@@ -96,6 +102,11 @@ export class SmartTableComponent<T extends Record<string, unknown> = Record<stri
     this.patch({ sortKey: nextDirection ? column.key : undefined, sortDirection: nextDirection });
   }
 
+  clearSelection(): void {
+    this.patch({ selectedIds: [] });
+    this.selectionChange.emit([]);
+  }
+
   toggleSelection(row: T): void {
     const id = this.rowId(row);
     const selectedIds = this.stateSubject.value.selectedIds.includes(id)
@@ -109,7 +120,7 @@ export class SmartTableComponent<T extends Record<string, unknown> = Record<stri
     const filtered = this.filterRows(rows, config.columns, state.filter);
     const sorted = this.sortRows(filtered, config.columns, state);
     const start = state.pageIndex * state.pageSize;
-    return { columns: config.columns, rows: sorted.slice(start, start + state.pageSize), total: sorted.length, state, pageSizeOptions: config.pageSizeOptions ?? [10, 25, 50] };
+    return { columns: config.columns, rows: sorted.slice(start, start + state.pageSize), total: sorted.length, state, pageSizeOptions: config.pageSizeOptions ?? [10, 25, 50], selectedCount: state.selectedIds.length };
   }
 
   private filterRows(rows: readonly T[], columns: readonly SmartTableColumn<T>[], filter: string): readonly T[] {

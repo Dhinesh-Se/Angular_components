@@ -14,6 +14,7 @@ const DEFAULT_CONFIG: Required<WorkflowTimelineConfig> = {
   orientation: 'vertical',
   showMetadata: false,
   density: 'comfortable',
+  showProgress: true,
 };
 
 @Component({
@@ -24,6 +25,7 @@ const DEFAULT_CONFIG: Required<WorkflowTimelineConfig> = {
   template: `
     <section class="ent-timeline" [class.ent-timeline--horizontal]="(vm$ | async)?.config?.orientation === 'horizontal'">
       <div *ngIf="vm$ | async as vm">
+        <div *ngIf="vm.config.showProgress" class="ent-timeline__progress">Completed {{ vm.completedCount }} / {{ vm.steps.length }}</div>
         <ol class="ent-timeline__list">
           <li class="ent-timeline__item" *ngFor="let step of vm.steps; trackBy: trackByStep" [ngClass]="'is-' + step.status">
             <button class="ent-timeline__marker" type="button" (click)="stepSelected.emit(step)" [attr.aria-label]="step.label + ' status ' + step.status">
@@ -49,7 +51,7 @@ const DEFAULT_CONFIG: Required<WorkflowTimelineConfig> = {
     </section>
   `,
   styles: [`
-    .ent-timeline__list{list-style:none;margin:0;padding:0;display:grid;gap:1rem}.ent-timeline--horizontal .ent-timeline__list{grid-auto-flow:column;grid-auto-columns:minmax(12rem,1fr);overflow:auto}.ent-timeline__item{display:grid;grid-template-columns:auto 1fr;gap:.75rem}.ent-timeline__marker{border:0;border-radius:999px;width:2rem;height:2rem;cursor:pointer}.is-completed .ent-timeline__marker{background:#047857;color:white}.is-active .ent-timeline__marker{background:#2563eb;color:white}.is-failed .ent-timeline__marker{background:#dc2626;color:white}.is-pending .ent-timeline__marker,.is-skipped .ent-timeline__marker{background:#e5e7eb}.ent-timeline__content{border:1px solid #e5e7eb;border-radius:.75rem;padding:1rem;background:white}.ent-timeline__content header{display:flex;justify-content:space-between;gap:1rem}.ent-timeline__content h3{margin:0}.ent-timeline__status{text-transform:capitalize;font-size:.8rem;color:#475569}dl{display:grid;grid-template-columns:max-content 1fr;gap:.25rem .75rem}`]
+    .ent-timeline__list{list-style:none;margin:0;padding:0;display:grid;gap:1rem}.ent-timeline--horizontal .ent-timeline__list{grid-auto-flow:column;grid-auto-columns:minmax(12rem,1fr);overflow:auto}.ent-timeline__item{display:grid;grid-template-columns:auto 1fr;gap:.75rem}.ent-timeline__marker{border:0;border-radius:999px;width:2rem;height:2rem;cursor:pointer}.is-completed .ent-timeline__marker{background:#047857;color:white}.is-active .ent-timeline__marker{background:#2563eb;color:white}.is-failed .ent-timeline__marker{background:#dc2626;color:white}.is-pending .ent-timeline__marker,.is-skipped .ent-timeline__marker{background:#e5e7eb}.ent-timeline__content{border:1px solid #e5e7eb;border-radius:.75rem;padding:1rem;background:white}.ent-timeline__content header{display:flex;justify-content:space-between;gap:1rem}.ent-timeline__content h3{margin:0}.ent-timeline__status{text-transform:capitalize;font-size:.8rem;color:#475569}dl{display:grid;grid-template-columns:max-content 1fr;gap:.25rem .75rem}.ent-timeline__progress{margin-bottom:.75rem;padding:.5rem .75rem;background:#eff6ff;border:1px solid #bfdbfe;border-radius:.5rem}`]
 })
 /** Renders immutable workflow steps and keeps presentation stateless so process orchestration remains in application services. */
 export class WorkflowTimelineComponent {

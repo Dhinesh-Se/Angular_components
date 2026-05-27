@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, map, distinctUntilChanged } from 'rxjs';
 import { PermissionContext, PermissionDecision, PermissionEvaluator, PermissionMode, PermissionProvider } from './permission.models';
 
 function sameDecision(previous: PermissionDecision, next: PermissionDecision): boolean {
-  return previous.allowed === next.allowed && previous.missing.join('|') === next.missing.join('|');
+  return previous.allowed === next.allowed && previous.missing.join('|') === next.missing.join('|') && previous.matched.join('|') === next.matched.join('|');
 }
 
 @Injectable({ providedIn: 'root' })
@@ -11,13 +11,14 @@ export class DefaultPermissionEvaluator implements PermissionEvaluator {
   canAccess(required: readonly string[], context: PermissionContext, mode: PermissionMode): PermissionDecision {
     const granted = new Set(context.permissions);
     const missing = required.filter(permission => !granted.has(permission));
+    const matched = required.filter(permission => granted.has(permission));
     const allowed = mode === 'all'
       ? missing.length === 0
       : mode === 'any'
         ? required.some(permission => granted.has(permission))
         : missing.length === required.length;
 
-    return { allowed, missing };
+    return { allowed, missing, matched };
   }
 }
 

@@ -18,11 +18,13 @@ export interface DynamicFormField {
   readonly validators?: readonly ValidatorFn[];
   readonly visibleWhen?: (value: Record<string, unknown>) => boolean;
   readonly disabledWhen?: (value: Record<string, unknown>) => boolean;
+  readonly section?: string;
 }
 
 export interface DynamicFormSchema {
   readonly id: string;
   readonly title?: string;
+  readonly description?: string;
   readonly fields: readonly DynamicFormField[];
   readonly submitLabel?: string;
 }

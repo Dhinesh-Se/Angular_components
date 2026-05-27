@@ -6,6 +6,13 @@ This project follows semantic versioning where practical: patch releases for fix
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-05-27
+
+- Dynamic Form: add section grouping, schema description, and live completion progress.
+- Smart Table: add selection summary, clear-selection action, and row click output event.
+- Workflow Timeline: add optional completed progress banner (`showProgress`).
+- Permission directive/evaluator: add `matched` permissions in decisions and expose allowed-node hints for UX/accessibility.
+
 ## [0.3.0] - 2026-05-27
 
 - Enhance `ent-query-builder` UX with type-aware editors for enum and boolean fields.

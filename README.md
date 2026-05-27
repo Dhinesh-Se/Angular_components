@@ -201,3 +201,11 @@ Build artifacts are published from `dist/enterprise-components`, not from the re
 - Prefer immutable inputs and observable streams for server-driven data.
 - Provide adapters at application boundaries for auth, persistence, and backend query translation.
 - Add design-system wrappers if your enterprise has a shared token or theming layer.
+
+
+### Cross-component enhancements (v0.4.0)
+
+- **Dynamic Form**: supports field `section`, schema `description`, and live completion progress UI.
+- **Smart Table**: shows selected row count, clear-selection button, and emits `rowClicked`.
+- **Workflow Timeline**: can show completed-step progress banner via `config.showProgress`.
+- **Permission Directive**: permission decisions now include `matched` permissions for richer UI context.
