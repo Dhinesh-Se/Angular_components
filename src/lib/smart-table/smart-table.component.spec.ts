@@ -8,8 +8,7 @@ describe('SmartTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule],
-      declarations: [SmartTableComponent]
+      imports: [SmartTableComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SmartTableComponent);

@@ -9,8 +9,7 @@ describe('QueryBuilderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, FormsModule],
-      declarations: [QueryBuilderComponent]
+      imports: [QueryBuilderComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(QueryBuilderComponent);

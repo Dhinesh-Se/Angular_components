@@ -8,8 +8,7 @@ describe('DynamicFormRendererComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule],
-      declarations: [DynamicFormRendererComponent]
+      imports: [DynamicFormRendererComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DynamicFormRendererComponent);

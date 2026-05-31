@@ -1,4 +1,4 @@
-import { Directive, DestroyRef, EmbeddedViewRef, Inject, Input, Optional, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, DestroyRef, EmbeddedViewRef, Inject, inject, Input, Optional, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subject, combineLatest, startWith, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DefaultPermissionEvaluator, PermissionStore } from './permission-store.service';
@@ -20,6 +20,7 @@ export class PermissionDirective {
   private fallbackTemplate?: TemplateRef<PermissionViewContext>;
   private allowedView?: EmbeddedViewRef<PermissionViewContext>;
   private deniedView?: EmbeddedViewRef<PermissionViewContext>;
+  private readonly destroyRef = inject(DestroyRef);
 
   @Input() set entHasPermission(required: string | readonly string[]) {
     this.requiredSubject.next(Array.isArray(required) ? required : [required]);
@@ -38,7 +39,6 @@ export class PermissionDirective {
     private readonly viewContainer: ViewContainerRef,
     private readonly permissionStore: PermissionStore,
     private readonly defaultEvaluator: DefaultPermissionEvaluator,
-    private readonly destroyRef: DestroyRef,
     @Optional() @Inject(PERMISSION_EVALUATOR) private readonly customEvaluator: PermissionEvaluator | null,
   ) {
     const evaluator = this.customEvaluator ?? this.defaultEvaluator;
@@ -49,7 +49,7 @@ export class PermissionDirective {
     ]).pipe(
       switchMap(([required, mode]) => this.permissionStore.selectDecision(required, mode, evaluator)),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(decision => this.render(decision));
+    ).subscribe((decision: PermissionDecision) => this.render(decision));
   }
 
   private render(decision: PermissionDecision): void {

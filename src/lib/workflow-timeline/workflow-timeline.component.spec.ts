@@ -8,8 +8,7 @@ describe('WorkflowTimelineComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule],
-      declarations: [WorkflowTimelineComponent]
+      imports: [WorkflowTimelineComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(WorkflowTimelineComponent);
