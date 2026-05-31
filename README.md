@@ -209,3 +209,30 @@ Build artifacts are published from `dist/enterprise-components`, not from the re
 - **Smart Table**: shows selected row count, clear-selection button, and emits `rowClicked`.
 - **Workflow Timeline**: can show completed-step progress banner via `config.showProgress`.
 - **Permission Directive**: permission decisions now include `matched` permissions for richer UI context.
+
+## Development
+
+### Setup
+
+```bash
+npm install
+```
+
+### Lint
+
+```bash
+npm run lint
+```
+
+### Test
+
+```bash
+npm test
+```
+
+### Build
+
+```bash
+npm run build
+```
+
